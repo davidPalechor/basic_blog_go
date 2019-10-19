@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:5.7.28
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: blog
+    ports:
+      - 3306:3306
+
+  web:
+    build: .
+    command: bee run --downdoc=true --gendoc=true
+    volumes:
+      - .:/go/src/basic_blog_go
+    working_dir: /go/src/basic_blog_go
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: db:3306
+    depends_on:
+      - db
