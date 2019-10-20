@@ -23,5 +23,6 @@ func init() {
 	beego.AddNamespace(ns)
 
 	beego.InsertFilter("/v1/trends", beego.BeforeRouter, auth.ValidateToken)
+	beego.InsertFilter("/v1/trends/analysis", beego.BeforeRouter, auth.ValidateToken)
 	beego.InsertFilter("/v1/posts", beego.BeforeRouter, auth.ValidateToken)
 }

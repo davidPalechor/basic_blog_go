@@ -25,6 +25,15 @@ func init() {
             Filters: nil,
             Params: nil})
 
+    beego.GlobalControllerRouter["basic_blog_go/controllers:TrendController"] = append(beego.GlobalControllerRouter["basic_blog_go/controllers:TrendController"],
+        beego.ControllerComments{
+            Method: "AnalyzeTrend",
+            Router: `/analysis`,
+            AllowHTTPMethods: []string{"get"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
     beego.GlobalControllerRouter["basic_blog_go/controllers:UserController"] = append(beego.GlobalControllerRouter["basic_blog_go/controllers:UserController"],
         beego.ControllerComments{
             Method: "CreateUser",
