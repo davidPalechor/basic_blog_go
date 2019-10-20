@@ -28,7 +28,7 @@ func NewUserLogic() *UserLogic {
 func (u *UserLogic) CreateUser(obj viewmodels.UserRequest) error {
 	passwordHash, err := HashPassword(obj.Password)
 	if err != nil {
-		return fmt.Errorf("Failed to hass password")
+		return fmt.Errorf("Failed to hash password")
 	}
 
 	user := models.User{
@@ -38,13 +38,13 @@ func (u *UserLogic) CreateUser(obj viewmodels.UserRequest) error {
 		Active:   true,
 	}
 	if _, err := u.DB.Insert(&user); err != nil {
-		return fmt.Errorf("Failed to create post")
+		return fmt.Errorf("Failed to create user")
 	}
 	return nil
 }
 
 // LoginUser returns a response object with a JWT value
-func (u *UserLogic) LoginUser(obj viewmodels.LoginRequest) *viewmodels.LoginResponse {
+func (u *UserLogic) LoginUser(obj viewmodels.LoginRequest) (*viewmodels.LoginResponse, error) {
 	var user models.User
 	query := u.DB.GetQueryTable(models.UserTableName).Filter("email", obj.Email)
 
@@ -56,11 +56,11 @@ func (u *UserLogic) LoginUser(obj viewmodels.LoginRequest) *viewmodels.LoginResp
 				Email: user.Email,
 				JWT:   token,
 			}
-			return &response
+			return &response, nil
 		}
-		return nil
+		return nil, fmt.Errorf("Invalid credentials")
 	}
-	return nil
+	return nil, fmt.Errorf("user does not exist")
 }
 
 // HashPassword turns a plain text password into a hash

@@ -48,9 +48,9 @@ func (c *UserController) CreateUser() {
 }
 
 // Login method to return a token to use endpoints
-// @Title Create user
-// @Summary Create an user in the app
-// @Description Create an user in the app
+// @Title Logs in an user in the app
+// @Summary Returns a valid JWT to use endpoints
+// @Description Returns a valid JWT to use endpoints
 // @Param   body	body	viewmodels.LoginRequest	true	"User info to be stored"
 // @Success 200 {object} viewmodels.LoginResponse
 // @Failure 400 Bad request
@@ -63,15 +63,14 @@ func (c *UserController) Login() {
 	c.Ctx.Output.SetStatus(http.StatusOK)
 
 	logic := logic.NewUserLogic()
-	response := logic.LoginUser(request)
+	response, err := logic.LoginUser(request)
 	c.Data["json"] = response
-	if response == nil {
-		c.Ctx.Output.SetStatus(http.StatusNotFound)
+	if err != nil {
+		c.Ctx.Output.SetStatus(http.StatusBadRequest)
 		c.Data["json"] = map[string]string{
-			"error": "user does not exist",
+			"error": err.Error(),
 		}
 	}
 	c.ServeJSON()
 	return
-
 }
